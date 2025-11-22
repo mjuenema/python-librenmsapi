@@ -1,0 +1,22 @@
+[project]
+name = "librenmsapi"
+version = "0.0.1"
+description = "Python client for the LibreNMS API"
+authors = [
+   {name = "Markus Juenemann", email = "markus@juenemann.net"}
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+dependencies = [
+  "requests",
+]
+
+[build-system]
+requires = ["flit_core>3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project.urls]
+Home = "https://github.com/mjuenema/python-librenmsapi"
+
+[tool.flit.sdist]
+exclude = ["tests/*"]

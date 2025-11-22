@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+
+import urllib.parse
+import functools
+import requests
+
+
+# Global variables that will be available to all methods.
+# Currently only supports a single LibreNMS() instance.
+# How 
+
+
+class ApiException(Exception):
+    def __init__(self, resp):
+        self.resp = resp
+        self.code = resp.status_code
+        self.message = resp.json()['message']
+        super().__init__(self.message)
+
+
+def api_call(func):
+    # func(route, **kwargs)
+    def wrapper(self, route, *args, **kwargs):
+        #
+        # func=<function Endpoint._get at 0x7f0e270d2e60>
+        # self=<__main__.Devices object at 0x7f0e272a9510>
+        # route=/api/v0/devices/snmpsim
+        # args=()
+        # kwargs={}
+
+        # Make 'route' a full path 
+        #
+        if func in ([Endpoint._post, Endpoint._put]):
+            route = f"{self.parent.url}{route}"
+        else:
+            route = f"{self.parent.url}/{route}{'?' + urllib.parse.urlencode(kwargs) if kwargs else ''}"
+
+        resp = func(self, route, **kwargs)
+
+        if resp.status_code >= 400:
+            raise ApiException(resp)
+        else:
+            content_type = resp.headers.get("Content-Type")
+            if content_type == 'application/json':
+                return resp.json()
+            elif content_type == 'image/png':
+                return resp.content
+            else:
+                raise ValueError(content_type)
+
+    return wrapper
+
+
+class Endpoint:
+    def __init__(self, parent):
+        self.parent = parent
+
+    @api_call
+    def _get(self, route, **kwargs):
+        return requests.get(route, headers={"X-Auth-Token": self.parent.token})
+
+    @api_call
+    def _post(self, route, **kwargs):
+        return requests.post(route, json=kwargs, headers={"X-Auth-Token": self.parent.token})
+
+    @api_call
+    def _patch(self, route, **kwargs):
+        return requests.patch(route, headers={"X-Auth-Token": self.parent.token})
+
+    @api_call
+    def _put(self, route, **kwargs):
+        return requests.put(route, json=kwargs, headers={"X-Auth-Token": self.parent.token})
+
+    @api_call
+    def _delete(self, route, **kwargs):
+        return requests.delete(route, headers={"X-Auth-Token": self.parent.token})
+
+{% for category in parsed %}
+class {{category['name']|pascalcase}}(Endpoint):
+
+{% for ep in category['endpoints'] %}
+   def {{ep['name']|snakecase}}(self{%if ep['required']%}, {{ep['required']|join(", ")}}{%endif%}{%if ep['optional']%}, {{ep['optional']|join("='', ")}}=''{%endif%}, **kwargs):
+       # route={{ep['route']}}
+       # required={{ep['required']}}
+       # optional={{ep['optional']}}
+       # method={{ep['method']}}
+       route = f"""{{ep['route']|route_to_fstring}}"""
+       return self._{{ep['method']|lower}}(route, **kwargs)
+
+{% endfor %} {# for ep in category #}
+{% endfor %} {# for category in parsed #}
+    
+
+class LibreNMS:
+
+    def __init__(self, url, token):
+        # verify_ssl and other possible arguments to the requests methods.
+        self.url = url
+        self.token = token
+        self.devices = Devices(self)
+
+{%- for category in parsed %}
+        self.{{category['name']|snakecase}} = {{category['name']|pascalcase}}(self)
+{%- endfor %} {# for category in parsed #}

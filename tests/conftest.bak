@@ -1,0 +1,38 @@
+#
+# Setup and teardown fixtures
+#
+# 1) Create an instance of LibreNMS.
+# 2) Create a Device and delete it at the end of the session.
+#
+
+import pytest
+import time
+import librenmsapi
+
+URL = 'http://10.1.1.101:8087'
+TOKEN = '890bfcacc9d187089c425658c470513f'
+HOSTNAME = 'snmpsim'
+COMMUNITY = 'iosxr'
+WAIT = 3
+SCOPE = 'package'
+
+@pytest.fixture
+def librenms(scope=SCOPE):
+    return librenmsapi.LibreNMS(URL, TOKEN)
+
+
+@pytest.fixture
+def constants(scope=SCOPE):
+    class constants:
+        hostname = HOSTNAME
+        community = COMMUNITY
+    return constants()
+
+
+@pytest.fixture
+def device(librenms, constants, scope=SCOPE):
+    librenms.devices.add_device(hostname=constants.hostname, community=constants.community)
+    time.sleep(WAIT)   # Allow LibreNMS to do some initial processing
+    yield 
+    librenms.devices.del_device(constants.hostname)
+
