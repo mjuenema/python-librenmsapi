@@ -23,14 +23,6 @@ def wait():
     time.sleep(WAIT)
 
 
-#@pytest.fixture
-#def device(librenms, scope=SCOPE):
-#    librenms.devices.add_device(hostname=HOSTNAME, community=COMMUNITY)
-#    time.sleep(WAIT)   # Allow LibreNMS to do some initial processing
-#    yield 
-#    librenms.devices.del_device(HOSTNAME)
-
-
 class TestDevices:
 
     # add_device() and del_device() are being "tested" in the conftest.py:device() fixture.
