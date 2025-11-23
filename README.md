@@ -55,3 +55,8 @@ print(result)
 #    ]
 # }
 ```
+
+There are other Python libraries you may want to check out.
+
+* [librenms-handler](https://pypi.org/project/librenms-handler/)
+* [PyLibreNMS](https://pypi.org/project/PyLibreNMS/)
