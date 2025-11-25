@@ -3,6 +3,10 @@
 import urllib.parse
 import functools
 import requests
+import logging
+
+log = logging.getLogger(__name__)
+log.addHandler(logging.NullHandler())
 
 
 # Global variables that will be available to all methods.
@@ -18,60 +22,53 @@ class ApiException(Exception):
         super().__init__(self.message)
 
 
-def api_call(func):
-    # func(route, **kwargs)
-    def wrapper(self, route, *args, **kwargs):
-        #
-        # func=<function Endpoint._get at 0x7f0e270d2e60>
-        # self=<__main__.Devices object at 0x7f0e272a9510>
-        # route=/api/v0/devices/snmpsim
-        # args=()
-        # kwargs={}
-
-        # Make 'route' a full path 
-        #
-        if func in ([Endpoint._post, Endpoint._put]):
-            route = f"{self.parent.url}{route}"
-        else:
-            route = f"{self.parent.url}/{route}{'?' + urllib.parse.urlencode(kwargs) if kwargs else ''}"
-
-        resp = func(self, route, **kwargs)
-
-        if resp.status_code >= 400:
-            raise ApiException(resp)
-        else:
-            content_type = resp.headers.get("Content-Type")
-            if content_type == 'application/json':
-                return resp.json()
-            elif content_type == 'image/png':
-                return resp.content
+def api_call(http_method):
+    def decorator(func):
+        # func(route, **kwargs)
+        def wrapper(self, route, *args, **kwargs):
+            if http_method in ('POST', 'PUT', 'PATCH'):
+                route = f"{self.parent.url}{route}"
             else:
-                raise ValueError(content_type)
+                route = f"{self.parent.url}/{route}{'?' + urllib.parse.urlencode(kwargs) if kwargs else ''}"
 
-    return wrapper
+            resp = func(self, route, **kwargs)
+
+            if resp.status_code >= 400:
+                raise ApiException(resp)
+            else:
+                content_type = resp.headers.get("Content-Type")
+                if content_type == 'application/json':
+                    return resp.json()
+                elif content_type == 'image/png':
+                    return resp.content
+                else:
+                    raise ValueError(content_type)
+
+        return wrapper
+    return decorator
 
 
 class Endpoint:
     def __init__(self, parent):
         self.parent = parent
 
-    @api_call
+    @api_call('GET')
     def _get(self, route, **kwargs):
         return requests.get(route, headers={"X-Auth-Token": self.parent.token})
 
-    @api_call
+    @api_call('POST')
     def _post(self, route, **kwargs):
         return requests.post(route, json=kwargs, headers={"X-Auth-Token": self.parent.token})
 
-    @api_call
+    @api_call('PATCH')
     def _patch(self, route, **kwargs):
-        return requests.patch(route, headers={"X-Auth-Token": self.parent.token})
+        return requests.patch(route, json=kwargs, headers={"X-Auth-Token": self.parent.token})
 
-    @api_call
+    @api_call('PUT')
     def _put(self, route, **kwargs):
         return requests.put(route, json=kwargs, headers={"X-Auth-Token": self.parent.token})
 
-    @api_call
+    @api_call('DELETE')
     def _delete(self, route, **kwargs):
         return requests.delete(route, headers={"X-Auth-Token": self.parent.token})
 
