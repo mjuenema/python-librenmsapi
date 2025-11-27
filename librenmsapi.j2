@@ -77,6 +77,16 @@ class {{category['name']|pascalcase}}(Endpoint):
 
 {% for ep in category['endpoints'] %}
    def {{ep['name']|snakecase}}(self{%if ep['required']%}, {{ep['required']|join(", ")}}{%endif%}{%if ep['optional']%}, {{ep['optional']|join("='', ")}}=''{%endif%}, **kwargs):
+       """{{ep['description']}}
+{% if ep['required'] %}
+          Arguments:
+          {{ep['route_descr']}}
+{% endif %}
+{% if ep['optional'] %}
+          Keyword arguments:
+          {{ep['input_descr']}}
+{% endif %}
+       """
        # route={{ep['route']}}
        # required={{ep['required']}}
        # optional={{ep['optional']}}

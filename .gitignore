@@ -1,5 +1,6 @@
 __pycache__/
 librenms.git/
+librenms.mjuenema.git/
 librenmsapi.bak.py
 dist/
 
