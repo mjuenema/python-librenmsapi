@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## 0.1.0 - Not yet released
-* First release that can be expected to work reliably.
+* First release that can be expected to work reasonably reliable.
 
 ## 0.0.2 - Not yet released
 * This project is still very much in its early stages!
