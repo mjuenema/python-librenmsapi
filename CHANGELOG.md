@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.1.0 - Not yet released
+* First release that can be expected to work reliably.
+
 ## 0.0.2 - Not yet released
 * This project is still very much in its early stages!
 * Re-implemented the [LibreNMS API](https://docs.librenms.org/API/]) documentation parser using the [Mistune](https://mistune.lepture.com/en/latest/index.html) library.
