@@ -17,7 +17,7 @@ client = librenmsapi.LibreNMS(URL, TOKEN):
 ```
 
 The endpoint categories (Devices, Inventory, Locations, etc.) are available as attributes of the ``LibreNMS`` class
-(in lower-case) and the actual endpoints as their methods().
+(in lower-case) and the actual endpoints as their methods.
 
 Required inputs must be provided as arguments, optional inputs can be supplied as keyword arguments.
 
