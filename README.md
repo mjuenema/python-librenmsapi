@@ -2,6 +2,8 @@
 
 **librenmsapi** is Python client library for the [LibreNMS API](https://docs.librenms.org/API/). 
 
+WARNING: This project is in its very early stages and lots of things may change!
+
 The Python code (``librenmsapi.py``) is auto-generated from the Markdown files for the LibreNMS API documentation. 
 It should therefore be complete, assuming that the LibreNMS API documentation is complete. 
 
