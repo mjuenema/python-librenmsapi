@@ -28,15 +28,13 @@ def api_call(http_method):
         def wrapper(self, route, *args, **kwargs):
             if http_method in ("POST", "PUT", "PATCH"):
                 route = f"{self.parent.url}{route}"
-                log.debug(f"{route} {kwargs}")
             else:
                 route = f"{self.parent.url}/{route}{'?' + urllib.parse.urlencode(kwargs) if kwargs else ''}"
-                log.debug(f"{route}")
 
             resp = func(self, route, **kwargs)
-            logging.debug(resp)
 
             if resp.status_code >= 400:
+                print(route, kwargs)
                 raise ApiException(resp)
             else:
                 content_type = resp.headers.get("Content-Type")
@@ -1154,7 +1152,7 @@ class Locations(Endpoint):
         # optional=[]
         # method=
         route = f"""/api/v0/location/{location}"""
-        return self._(route, **kwargs)
+        return self._get(route, **kwargs)
 
     def maintenance_location(self, location, **kwargs):
         # route=/api/v0/locations/:location/maintenance
