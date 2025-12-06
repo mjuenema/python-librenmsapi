@@ -29,24 +29,24 @@ Any API calls that result in an error will raise ``librenmsapi.ApiException``.
 
 result = client.devices.add_device(hostname='localhost', community='public')
 print(result)
-# {'count': 1,
-# 'devices': [{'agent_uptime': 0,
-#              'authalgo': None,
-#              'authlevel': None,
-#              'authname': None,
-#              'authpass': None,
-#              ...
-#              'transport': 'udp',
-#              'type': '',
-#              'uptime': None,
-#              'version': None}],
-# 'status': 'ok'}
+# [
+#    {
+#        'agent_uptime': 0,
+#        'authalgo': None,
+#        'authlevel': None,
+#        'authname': None,
+#        'authpass': None,
+#        ...
+#        'transport': 'udp',
+#        'type': '',
+#        'uptime': None,
+#        'version': None}
+# ],
+
 
 result = client.devices.get_device('localhost')
 print(result)
-# {
-#    "status": "ok",
-#    "devices": [
+# [
 #        {
 #            "device_id": "1",
 #            "hostname": "localhost",
@@ -54,8 +54,7 @@ print(result)
 #            "serial": null,
 #            "icon": null
 #        }
-#    ]
-# }
+# ]
 ```
 
 There are other Python libraries you may want to check out.
