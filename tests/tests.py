@@ -34,66 +34,65 @@ class TestDevices:
 
     def test_get_device(self, librenms):
         result = librenms.devices.get_device(HOSTNAME)
-        assert result['status'] == 'ok'
-        assert result['devices'][0]['hostname'] == HOSTNAME
-        assert result['devices'][0]['community'] == COMMUNITY
+        assert result[0]['hostname'] == HOSTNAME
+        assert result[0]['community'] == COMMUNITY
 
     def test_update_device_field(self, librenms):
         result = librenms.devices.update_device_field(HOSTNAME, field='community', data='private') 
-        assert result['status'] == 'ok'
         result = librenms.devices.get_device(HOSTNAME)
-        assert result['devices'][0]['community'] == 'private'
+        assert result[0]['community'] == 'private'
 
     def test_update_device_field_array(self, librenms):
         result = librenms.devices.update_device_field(HOSTNAME, field=['community', 'snmpver'], data=['private', '1']) 
-        assert result['status'] == 'ok'
+        #assert result['status'] == 'ok'
         result = librenms.devices.get_device(HOSTNAME)
-        assert result['devices'][0]['community'] == 'private'
-        assert result['devices'][0]['snmpver'] == '1'
+        assert result[0]['community'] == 'private'
+        assert result[0]['snmpver'] == '1'
 
     def test_maintenance_device(self, librenms):
         result = librenms.devices.maintenance_device(HOSTNAME, duration='0:01')
-        assert result['status'] == 'ok'
-        assert 'moved into maintenance mode for 0:01h' in result['message']
+        assert result is None
 
     def test_rename_device(self, librenms, longwait):
         result = librenms.devices.rename_device(HOSTNAME, "renamed"+HOSTNAME)
-        assert result['status'] == 'ok'
+        assert result is None
+
         result = librenms.devices.get_device("renamed"+HOSTNAME)
-        assert result['status'] == 'ok'
+        assert result[0]['hostname'] == "renamed"+HOSTNAME
+
         result = librenms.devices.rename_device("renamed"+HOSTNAME, HOSTNAME)
-        assert result['status'] == 'ok'
+        assert result is None
+
         result = librenms.devices.get_device(HOSTNAME)
-        assert result['status'] == 'ok'
+        assert result[0]['hostname'] == HOSTNAME
 
     def test_discover_device(self, librenms):
         result = librenms.devices.discover_device(HOSTNAME)
-        assert result['status'] == 'ok'
-        assert 'Device will be rediscovered' in result['result']['message']
+        assert result == {'status': 0, 'message': 'Device will be rediscovered'}
 
     def test_availability(self, librenms):
         result = librenms.devices.availability(HOSTNAME)
-        assert result['status'] == 'ok'
+        assert isinstance(result, list)
 
     def test_outages(self, librenms):
         result = librenms.devices.outages(HOSTNAME)
-        assert result['status'] == 'ok'
+        assert isinstance(result, list)
 
     def test_get_graphs(self, librenms):
         result = librenms.devices.get_graphs(HOSTNAME)
-        assert result['status'] == 'ok'
+        assert isinstance(result, list)
 
     def test_list_available_health_graphs(self, librenms):
         result = librenms.devices.list_available_health_graphs(HOSTNAME)
-        assert result['status'] == 'ok'
+        assert isinstance(result, list)
 
     def test_list_available_health_graphs_type(self, librenms):
         result = librenms.devices.list_available_health_graphs(HOSTNAME, 'health')
-        assert result['status'] == 'ok'
+        assert isinstance(result, list)
 
     def test_list_available_wireless_graphs(self, librenms):
         result = librenms.devices.list_available_wireless_graphs(HOSTNAME)
-        assert result['status'] == 'ok'
+        assert isinstance(result, list)
 
     #def test_get_health_graph(self, librenms):
     #    result = librenms.devices.get_health_graph(HOSTNAME, 'device_voltage')
@@ -101,7 +100,6 @@ class TestDevices:
 
     def test_get_device_ports(self, librenms, shortwait):
         result = librenms.devices.get_device_ports(HOSTNAME)
-        assert result['status'] == 'ok'
-        assert len(result['ports']) == 67
+        assert len(result) == 67
 
 

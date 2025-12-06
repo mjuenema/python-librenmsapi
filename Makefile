@@ -19,8 +19,14 @@ code:
 test: code
 	make -C tests test
 
+retest: code
+	make -C tests retest
+
 debug: code
 	make -C tests debug
+
+redebug: code
+	make -C tests redebug
 
 
 build: test

@@ -34,7 +34,6 @@ SKIPPED_ENDPOINTS = (
 
 
 def route_to_fstring(route):
-    print(route)
     return re.sub(r':([a-z_]+)', '{\g<1>}', re.sub(r'\(/:([a-z_]+)\)', '{"/" + \g<1> if \g<1> else ""}', route))
 
 
@@ -53,7 +52,7 @@ for fn in glob.glob(f"{PATH_TO_API_DOC}/*.md"):
 
     category = path.stem
 
-    print('CATEGORY', category, file=sys.stderr)
+#    print('CATEGORY', category, file=sys.stderr)
 
     # Skip index.md
     if category == 'index':
@@ -104,7 +103,7 @@ for fn in glob.glob(f"{PATH_TO_API_DOC}/*.md"):
             # - list
             # - paragraph
 
-            print('TOKEN', state, token, file=sys.stderr)
+            #print('TOKEN', state, token, file=sys.stderr)
 
 
             # "Copy" blank lines if they are part of the route or input arguments
