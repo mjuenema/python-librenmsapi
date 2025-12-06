@@ -21,8 +21,6 @@ The endpoint categories (Devices, Inventory, Locations, etc.) are available as a
 
 Required inputs must be provided as arguments, optional inputs can be supplied as keyword arguments.
 
-All methods return a Python dictionary, equivalent to the JSON output shown in the [LibreNMS API](https://docs.librenms.org/API/) documentation.
-
 Any API calls that result in an error will raise ``librenmsapi.ApiException``.
 
 ```python
