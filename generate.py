@@ -107,7 +107,7 @@ for fn in glob.glob(f"{PATH_TO_API_DOC}/*.md"):
             # - list
             # - paragraph
 
-            print('TOKEN', state, token, file=sys.stderr)
+            #print('TOKEN', state, token, file=sys.stderr)
 
 
             # "Copy" blank lines if they are part of the route or input arguments

@@ -26,7 +26,7 @@ def api_call(http_method):
             if http_method in ("POST", "PUT", "PATCH"):
                 route = f"{self.parent.url}{route}"
             else:
-                route = f"{self.parent.url}/{route}{'?' + urllib.parse.urlencode(kwargs) if kwargs else ''}"
+                route = f"{self.parent.url}{route}{'?' + urllib.parse.urlencode(kwargs) if kwargs else ''}"
 
             resp = func(self, route, **kwargs)
 

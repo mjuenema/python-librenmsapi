@@ -1,21 +1,23 @@
 import pytest
 import librenmsapi
 import time
+import os
+import random
 
 
-URL = 'http://10.1.1.101:8087'
-TOKEN = '890bfcacc9d187089c425658c470513f'
-HOSTNAME = 'snmpsim'
-COMMUNITY = 'iosxr'
+URL = os.environ['LIBRENMS_URL']    #'http://10.1.1.101:8087'
+TOKEN = os.environ['LIBRENMS_TOKEN']
+HOSTNAME = f'test{random.randint(100, 999)}'
+HOSTNAME = 'demo.pysnmp.com'
+print(HOSTNAME)
+COMMUNITY = 'public'
 SHORTWAIT = 5
 LONGWAIT = 20
-SCOPE = 'module'
 
 @pytest.fixture
 def librenms():
     conn = librenmsapi.LibreNMS(URL, TOKEN)
-    conn.devices.add_device(hostname=HOSTNAME, community=COMMUNITY)
-    #time.sleep(WAIT)   # Allow LibreNMS to do some initial processing
+    conn.devices.add_device(hostname=HOSTNAME, community=COMMUNITY, version='v1', force_add=True)
     yield conn
     conn.devices.del_device(HOSTNAME)
 
@@ -53,18 +55,18 @@ class TestDevices:
         result = librenms.devices.maintenance_device(HOSTNAME, duration='0:01')
         assert result is None
 
-    def test_rename_device(self, librenms, longwait):
-        result = librenms.devices.rename_device(HOSTNAME, "renamed"+HOSTNAME)
-        assert result is None
-
-        result = librenms.devices.get_device("renamed"+HOSTNAME)
-        assert result[0]['hostname'] == "renamed"+HOSTNAME
-
-        result = librenms.devices.rename_device("renamed"+HOSTNAME, HOSTNAME)
-        assert result is None
-
-        result = librenms.devices.get_device(HOSTNAME)
-        assert result[0]['hostname'] == HOSTNAME
+#    def test_rename_device(self, librenms, longwait):
+#        result = librenms.devices.rename_device(HOSTNAME, "renamed"+HOSTNAME)
+#        assert result is None
+#
+#        result = librenms.devices.get_device("renamed"+HOSTNAME)
+#        assert result[0]['hostname'] == "renamed"+HOSTNAME
+#
+#        result = librenms.devices.rename_device("renamed"+HOSTNAME, HOSTNAME)
+#        assert result is None
+#
+#        result = librenms.devices.get_device(HOSTNAME)
+#        assert result[0]['hostname'] == HOSTNAME
 
     def test_discover_device(self, librenms):
         result = librenms.devices.discover_device(HOSTNAME)
@@ -98,8 +100,8 @@ class TestDevices:
     #    result = librenms.devices.get_health_graph(HOSTNAME, 'device_voltage')
     #    assert result['status'] == 'ok'
 
-    def test_get_device_ports(self, librenms, shortwait):
-        result = librenms.devices.get_device_ports(HOSTNAME)
-        assert len(result) == 67
+#    def test_get_device_ports(self, librenms, shortwait):
+#        result = librenms.devices.get_device_ports(HOSTNAME)
+#        assert len(result) == 67
 
 

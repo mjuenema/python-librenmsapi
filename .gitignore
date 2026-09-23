@@ -3,4 +3,5 @@ librenms.git/
 librenms.mjuenema.git/
 librenmsapi.bak.py
 dist/
+tests/conftest.bak
 
