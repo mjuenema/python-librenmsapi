@@ -1,7 +1,8 @@
 
 
 all:
-	@echo "make code"
+	@echo "make code         - Create librenmsapi.py"
+	@echo "make clean        - Delete librenmsapi.py"
 	@echo "make test"
 	@echo "make build"
 	@echo "make publish"
@@ -13,7 +14,8 @@ code:
 	./generate.py > librenmsapi.py
 	python -m black --verbose librenmsapi.py
 
-
+clean:
+	rm -v librenmsapi.py
 
 
 test: code

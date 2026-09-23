@@ -10,7 +10,8 @@ import jinja2
 import caseconverter
 import mistune
 
-PATH_TO_API_DOC='librenms.mjuenema.git/doc/API/'
+# Path to own fork of LibreNMS (https://github.com/mjuenema/librenms)
+PATH_TO_API_DOC='/home/mjuenemann/Projects/Networking/mjuenema.librenms.git/doc/API/'
 
 
 # Parser states. Set to the previous(!) type of information processed.
@@ -48,9 +49,12 @@ j2template = j2env.get_template('librenmsapi.j2')
 parsed = []
 
 for fn in glob.glob(f"{PATH_TO_API_DOC}/*.md"):
+
     path = pathlib.Path(fn)
 
     category = path.stem
+    if category == 'v1':
+        continue
 
 #    print('CATEGORY', category, file=sys.stderr)
 
@@ -103,7 +107,7 @@ for fn in glob.glob(f"{PATH_TO_API_DOC}/*.md"):
             # - list
             # - paragraph
 
-            #print('TOKEN', state, token, file=sys.stderr)
+            print('TOKEN', state, token, file=sys.stderr)
 
 
             # "Copy" blank lines if they are part of the route or input arguments

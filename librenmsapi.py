@@ -99,22 +99,10 @@ class Endpoint:
         return requests.delete(route, headers={"X-Auth-Token": self.parent.token})
 
 
-class System(Endpoint):
-
-    def system(self, **kwargs):
-        """Display Librenms instance information."""
-        # route=/api/v0/system
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/system"""
-        return self._get(route, **kwargs)
-
-
 class Inventory(Endpoint):
 
     def get_inventory(self, hostname, **kwargs):
-        """Retrieve the inventory for a device. If you call this without any
+        """Retrieve the inventory of a device. A call without parameters returns
 
         Arguments:
         - hostname can be either the device hostname or the device id
@@ -129,7 +117,7 @@ class Inventory(Endpoint):
         return self._get(route, **kwargs)
 
     def get_inventory_for_device(self, hostname, **kwargs):
-        """Retrieve the flattened inventory for a device.  This retrieves all
+        """Retrieve the flat inventory of a device. This call returns all
 
         Arguments:
         - hostname can be either the device hostname or the device id
@@ -141,559 +129,6 @@ class Inventory(Endpoint):
         # optional=[]
         # method=GET
         route = f"""/api/v0/inventory/{hostname}/all"""
-        return self._get(route, **kwargs)
-
-
-class Bills(Endpoint):
-
-    def list_bills(self, **kwargs):
-        """Retrieve the list of bills currently in the system."""
-        # route=/api/v0/bills
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/bills"""
-        return self._get(route, **kwargs)
-
-    def get_bill(self, id, **kwargs):
-        """Retrieve a specific bill
-
-        Arguments:
-        - id is the specific bill id
-
-
-        """
-        # route=/api/v0/bills/:id
-        # required=['id']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/bills/{id}"""
-        return self._get(route, **kwargs)
-
-    def get_bill_graph(self, **kwargs):
-        """NB: The graphs returned from this will always be png as they do not"""
-        # route=`
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""`"""
-        return self._get(route, **kwargs)
-
-    def get_bill_graphdata(self, id, graph_type, **kwargs):
-        """Retrieve the data used to draw a graph so it can be rendered in an external system
-
-        Arguments:
-
-
-
-        """
-        # route=/api/v0/bills/:id/graphdata/:graph_type
-        # required=['id', 'graph_type']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/bills/{id}/graphdata/{graph_type}"""
-        return self._get(route, **kwargs)
-
-    def get_bill_history(self, id, **kwargs):
-        """Retrieve the history of specific bill
-
-        Arguments:
-
-
-
-        """
-        # route=/api/v0/bills/:id/history
-        # required=['id']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/bills/{id}/history"""
-        return self._get(route, **kwargs)
-
-    def get_bill_history_graph(self, id, bill_hist_id, graph_type, **kwargs):
-        """NB: The graphs returned from this will always be png as they do not
-
-        Arguments:
-
-
-
-        """
-        # route=/api/v0/bills/:id/history/:bill_hist_id/graphs/:graph_type
-        # required=['id', 'bill_hist_id', 'graph_type']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/bills/{id}/history/{bill_hist_id}/graphs/{graph_type}"""
-        return self._get(route, **kwargs)
-
-    def get_bill_history_graphdata(self, id, bill_hist_id, graph_type, **kwargs):
-        """Retrieve the data for a graph of a previous period of a bill, to be
-
-        Arguments:
-
-
-
-        """
-        # route=/api/v0/bills/:id/history/:bill_hist_id/graphdata/:graph_type
-        # required=['id', 'bill_hist_id', 'graph_type']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/bills/{id}/history/{bill_hist_id}/graphdata/{graph_type}"""
-        return self._get(route, **kwargs)
-
-    def delete_bill(self, id, **kwargs):
-        """Delete a specific bill and all dependent data
-
-        Arguments:
-        - id is the specific bill id
-
-
-        """
-        # route=/api/v0/bills/:id
-        # required=['id']
-        # optional=[]
-        # method=DELETE
-        route = f"""/api/v0/bills/{id}"""
-        return self._delete(route, **kwargs)
-
-    def create_edit_bill(self, **kwargs):
-        """Creates a new bill or updates an existing one"""
-        # route=/api/v0/bills
-        # required=[]
-        # optional=[]
-        # method=POST
-        route = f"""/api/v0/bills"""
-        return self._post(route, **kwargs)
-
-
-class DeviceGroups(Endpoint):
-
-    def get_devicegroups(self, **kwargs):
-        """List all device groups."""
-        # route=/api/v0/devicegroups
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/devicegroups"""
-        return self._get(route, **kwargs)
-
-    def add_devicegroup(self, **kwargs):
-        """Add a new device group. Upon success, the ID of the new device group is returned"""
-        # route=/api/v0/devicegroups
-        # required=[]
-        # optional=[]
-        # method=POST
-        route = f"""/api/v0/devicegroups"""
-        return self._post(route, **kwargs)
-
-    def update_devicegroup(self, name, **kwargs):
-        """Updates a device group.
-
-        Arguments:
-        - name Is the name of the device group which can be obtained using
-
-
-        """
-        # route=/api/v0/devicegroups/:name
-        # required=['name']
-        # optional=[]
-        # method=PATCH
-        route = f"""/api/v0/devicegroups/{name}"""
-        return self._patch(route, **kwargs)
-
-    def delete_devicegroup(self, name, **kwargs):
-        """Deletes a device group.
-
-        Arguments:
-        - name Is the name of the device group which can be obtained using
-
-
-        """
-        # route=/api/v0/devicegroups/:name
-        # required=['name']
-        # optional=[]
-        # method=DELETE
-        route = f"""/api/v0/devicegroups/{name}"""
-        return self._delete(route, **kwargs)
-
-    def get_devices_by_group(self, name, **kwargs):
-        """List all devices matching the group provided.
-
-        Arguments:
-        - name Is the name of the device group which can be obtained using
-
-
-        """
-        # route=/api/v0/devicegroups/:name
-        # required=['name']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/devicegroups/{name}"""
-        return self._get(route, **kwargs)
-
-    def maintenance_devicegroup(self, name, **kwargs):
-        """Set a device group into maintenance mode.
-
-        Arguments:
-
-
-
-        """
-        # route=/api/v0/devicegroups/:name/maintenance
-        # required=['name']
-        # optional=[]
-        # method=POST
-        route = f"""/api/v0/devicegroups/{name}/maintenance"""
-        return self._post(route, **kwargs)
-
-    def add_devices_to_group(self, name, **kwargs):
-        """Add devices to a device group.
-
-        Arguments:
-        - name Is the name of the device group which can be obtained using
-
-
-        """
-        # route=/api/v0/devicegroups/:name/devices
-        # required=['name']
-        # optional=[]
-        # method=POST
-        route = f"""/api/v0/devicegroups/{name}/devices"""
-        return self._post(route, **kwargs)
-
-    def remove_devices_from_group(self, name, **kwargs):
-        """Removes devices from a device group.
-
-        Arguments:
-        - name Is the name of the device group which can be obtained using
-
-
-        """
-        # route=/api/v0/devicegroups/:name/devices
-        # required=['name']
-        # optional=[]
-        # method=DELETE
-        route = f"""/api/v0/devicegroups/{name}/devices"""
-        return self._delete(route, **kwargs)
-
-
-class PollerGroups(Endpoint):
-
-    def remove_devices_from_group(self, poller_group, **kwargs):
-        """Removes devices from a device group.
-
-                  Arguments:
-                  - name Is the name of the device group which can be obtained using
-        - poller_group: optional name or id of the poller group to get
-
-
-        """
-        # route=/api/v0/poller_group/:poller_group
-        # required=['poller_group']
-        # optional=[]
-        # method=DELETE
-        route = f"""/api/v0/poller_group/{poller_group}"""
-        return self._delete(route, **kwargs)
-
-
-class Alerts(Endpoint):
-
-    def get_alert(self, id, **kwargs):
-        """Get details of an alert
-
-        Arguments:
-        - id is the alert id, you can obtain a list of alert ids from
-
-
-        """
-        # route=/api/v0/alerts/:id
-        # required=['id']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/alerts/{id}"""
-        return self._get(route, **kwargs)
-
-    def ack_alert(self, id, **kwargs):
-        """Acknowledge an alert
-
-        Arguments:
-        - id is the alert id, you can obtain a list of alert ids from
-
-
-        """
-        # route=/api/v0/alerts/:id
-        # required=['id']
-        # optional=[]
-        # method=PUT
-        route = f"""/api/v0/alerts/{id}"""
-        return self._put(route, **kwargs)
-
-    def unmute_alert(self, id, **kwargs):
-        """Unmute an alert
-
-        Arguments:
-        - id is the alert id, you can obtain a list of alert ids from
-
-
-        """
-        # route=/api/v0/alerts/unmute/:id
-        # required=['id']
-        # optional=[]
-        # method=PUT
-        route = f"""/api/v0/alerts/unmute/{id}"""
-        return self._put(route, **kwargs)
-
-    def list_alerts(self, **kwargs):
-        """List all alerts"""
-        # route=/api/v0/alerts
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/alerts"""
-        return self._get(route, **kwargs)
-
-    def get_alert_rule(self, id, **kwargs):
-        """Get the alert rule details.
-
-        Arguments:
-        - id is the rule id.
-
-
-        """
-        # route=/api/v0/rules/:id
-        # required=['id']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/rules/{id}"""
-        return self._get(route, **kwargs)
-
-    def delete_rule(self, id, **kwargs):
-        """Delete an alert rule by id
-
-        Arguments:
-        - id is the rule id.
-
-
-        """
-        # route=/api/v0/rules/:id
-        # required=['id']
-        # optional=[]
-        # method=DELETE
-        route = f"""/api/v0/rules/{id}"""
-        return self._delete(route, **kwargs)
-
-    def list_alert_rules(self, **kwargs):
-        """List the alert rules."""
-        # route=/api/v0/rules
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/rules"""
-        return self._get(route, **kwargs)
-
-    def add_rule(self, **kwargs):
-        """Add a new alert rule."""
-        # route=/api/v0/rules
-        # required=[]
-        # optional=[]
-        # method=POST
-        route = f"""/api/v0/rules"""
-        return self._post(route, **kwargs)
-
-    def edit_rule(self, **kwargs):
-        """Edit an existing alert rule"""
-        # route=/api/v0/rules
-        # required=[]
-        # optional=[]
-        # method=PUT
-        route = f"""/api/v0/rules"""
-        return self._put(route, **kwargs)
-
-
-class Routing(Endpoint):
-
-    def list_bgp(self, **kwargs):
-        """List the current BGP sessions."""
-        # route=/api/v0/bgp
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/bgp"""
-        return self._get(route, **kwargs)
-
-    def get_bgp(self, id, **kwargs):
-        """Retrieves a BGP session by ID
-
-        Arguments:
-
-
-
-        """
-        # route=/api/v0/bgp/:id
-        # required=['id']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/bgp/{id}"""
-        return self._get(route, **kwargs)
-
-    def edit_bgp_descr(self, id, **kwargs):
-        """This is a POST type request
-
-        Arguments:
-
-
-
-        """
-        # route=/api/v0/bgp/:id
-        # required=['id']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/bgp/{id}"""
-        return self._get(route, **kwargs)
-
-    def list_cbgp(self, **kwargs):
-        """List the current BGP sessions counters."""
-        # route=/api/v0/routing/bgp/cbgp
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/routing/bgp/cbgp"""
-        return self._get(route, **kwargs)
-
-    def list_ip_addresses(self, address_family, **kwargs):
-        """List all IPv4 and IPv6 or only version specific addresses.
-
-        Arguments:
-
-
-
-        """
-        # route=/api/v0/resources/ip/addresses/:address_family
-        # required=['address_family']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/resources/ip/addresses/{address_family}"""
-        return self._get(route, **kwargs)
-
-    def get_network_ip_addresses(self, id, **kwargs):
-        """Get all IPv4 and IPv6 addresses for particular network.
-
-        Arguments:
-        - id must be integer
-
-
-        """
-        # route=/api/v0/resources/ip/networks/:id/ip
-        # required=['id']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/resources/ip/networks/{id}/ip"""
-        return self._get(route, **kwargs)
-
-    def list_ip_networks(self, address_family, **kwargs):
-        """List all IPv4 and IPv6 or only version specific networks.
-
-        Arguments:
-
-
-
-        """
-        # route=/api/v0/resources/ip/networks/:address_family
-        # required=['address_family']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/resources/ip/networks/{address_family}"""
-        return self._get(route, **kwargs)
-
-    def list_ipsec(self, hostname, **kwargs):
-        """List the current IPSec tunnels which are active.
-
-        Arguments:
-        - hostname can be either the device hostname or id
-
-
-        """
-        # route=/api/v0/routing/ipsec/data/:hostname
-        # required=['hostname']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/routing/ipsec/data/{hostname}"""
-        return self._get(route, **kwargs)
-
-    def list_ospf(self, **kwargs):
-        """List the current OSPF neighbours."""
-        # route=/api/v0/ospf
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/ospf"""
-        return self._get(route, **kwargs)
-
-    def list_ospf_ports(self, **kwargs):
-        """List the current OSPF ports."""
-        # route=/api/v0/ospf_ports
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/ospf_ports"""
-        return self._get(route, **kwargs)
-
-    def list_ospfv3(self, **kwargs):
-        """List the current OSPFv3 neighbours."""
-        # route=/api/v0/ospfv3
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/ospfv3"""
-        return self._get(route, **kwargs)
-
-    def list_ospfv3_ports(self, **kwargs):
-        """List the current OSPFv3 ports."""
-        # route=/api/v0/ospfv3_ports
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/ospfv3_ports"""
-        return self._get(route, **kwargs)
-
-    def list_vrf(self, **kwargs):
-        """List the current VRFs."""
-        # route=/api/v0/routing/vrf
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/routing/vrf"""
-        return self._get(route, **kwargs)
-
-    def get_vrf(self, id, **kwargs):
-        """Retrieves VRF by ID
-
-        Arguments:
-
-
-
-        """
-        # route=/api/v0/routing/vrf/:id
-        # required=['id']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/routing/vrf/{id}"""
-        return self._get(route, **kwargs)
-
-    def list_mpls_services(self, **kwargs):
-        """List MPLS services"""
-        # route=/api/v0/routing/mpls/services
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/routing/mpls/services"""
-        return self._get(route, **kwargs)
-
-    def list_mpls_saps(self, **kwargs):
-        """List MPLS SAPs"""
-        # route=/api/v0/routing/mpls/saps
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/routing/mpls/saps"""
         return self._get(route, **kwargs)
 
 
@@ -766,7 +201,7 @@ class Switching(Endpoint):
         """Get a list of all ports FDB.
 
         Arguments:
-        - mac is the specific MAC address you would like to query
+        - mac is the MAC address of the query
 
 
         """
@@ -781,7 +216,7 @@ class Switching(Endpoint):
         """Get a list of all ports FDB with human readable device  and interface names.
 
         Arguments:
-        - mac is the specific MAC address you would like to query
+        - mac is the MAC address of the query
 
 
         """
@@ -796,7 +231,7 @@ class Switching(Endpoint):
         """Get a list of all ports NAC.
 
         Arguments:
-        - mac is the specific MAC address you would like to query
+        - mac is the MAC address of the query
 
 
         """
@@ -805,48 +240,6 @@ class Switching(Endpoint):
         # optional=[]
         # method=GET
         route = f"""/api/v0/resources/nac/{mac}"""
-        return self._get(route, **kwargs)
-
-
-class PortSecurity(Endpoint):
-
-    def get_all_port_security(self, **kwargs):
-        """Get all port security info by inputting port_id"""
-        # route=/api/v0/port_security
-        # required=[]
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/port_security"""
-        return self._get(route, **kwargs)
-
-    def get_port_security_by_port(self, port_id, **kwargs):
-        """Get all port security info by inputting port_id
-
-        Arguments:
-        - portid must be an integer
-
-
-        """
-        # route=/api/v0/port_security/port/:port_id
-        # required=['port_id']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/port_security/port/{port_id}"""
-        return self._get(route, **kwargs)
-
-    def get_port_security_by_hostname(self, hostname, **kwargs):
-        """Get all port security info by inputting port_id
-
-        Arguments:
-        - hostname can be str hostname or int device_id
-
-
-        """
-        # route=/api/v0/port_security/:hostname
-        # required=['hostname']
-        # optional=[]
-        # method=GET
-        route = f"""/api/v0/port_security/{hostname}"""
         return self._get(route, **kwargs)
 
 
@@ -1050,6 +443,21 @@ class Devices(Endpoint):
         route = f"""/api/v0/devices/{hostname}/wireless{"/" + type if type else ""}{"/" + sensor_id if sensor_id else ""}"""
         return self._get(route, **kwargs)
 
+    def get_device_wireless_sensors(self, hostname, **kwargs):
+        """Get the wireless sensors recorded for a device. Returns rows from the
+
+        Arguments:
+        - hostname can be either the device hostname or id
+
+
+        """
+        # route=/api/v0/devices/:hostname/wireless-sensors
+        # required=['hostname']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/devices/{hostname}/wireless-sensors"""
+        return self._get(route, **kwargs)
+
     def get_health_graph(self, hostname, type, sensor_id="", **kwargs):
         """Get a particular health class graph for a device, if you provide a
 
@@ -1249,9 +657,9 @@ class Devices(Endpoint):
         # route=/api/v0/devices/:hostname/components
         # required=['hostname']
         # optional=[]
-        # method=PUT
+        # method=
         route = f"""/api/v0/devices/{hostname}/components"""
-        return self._put(route, **kwargs)
+        return self._(route, **kwargs)
 
     def delete_components(self, hostname, component, **kwargs):
         """Delete an existing component on a particular device.
@@ -1347,7 +755,7 @@ class Devices(Endpoint):
         return self._post(route, **kwargs)
 
     def add_device(self, **kwargs):
-        """To guarantee device is added, use force_add. This will skip checks"""
+        """For a guaranteed add, use force_add. This option skips the checks"""
         # route=/api/v0/devices
         # required=[]
         # optional=[]
@@ -1434,7 +842,7 @@ class Devices(Endpoint):
         """search all oxidized device configs for a string.
 
         Arguments:
-        - searchstring is the specific string you would like to search for.
+        - searchstring is the string of the search.
 
 
         """
@@ -1491,6 +899,264 @@ class Devices(Endpoint):
         return self._delete(route, **kwargs)
 
 
+class DeviceGroups(Endpoint):
+
+    def get_devicegroups(self, **kwargs):
+        """List all device groups."""
+        # route=/api/v0/devicegroups
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/devicegroups"""
+        return self._get(route, **kwargs)
+
+    def add_devicegroup(self, **kwargs):
+        """Add a new device group. Upon success, the ID of the new device group is returned"""
+        # route=/api/v0/devicegroups
+        # required=[]
+        # optional=[]
+        # method=POST
+        route = f"""/api/v0/devicegroups"""
+        return self._post(route, **kwargs)
+
+    def update_devicegroup(self, name, **kwargs):
+        """Updates a device group.
+
+        Arguments:
+        - name Is the name of the device group which can be obtained using
+
+
+        """
+        # route=/api/v0/devicegroups/:name
+        # required=['name']
+        # optional=[]
+        # method=PATCH
+        route = f"""/api/v0/devicegroups/{name}"""
+        return self._patch(route, **kwargs)
+
+    def delete_devicegroup(self, name, **kwargs):
+        """Deletes a device group.
+
+        Arguments:
+        - name Is the name of the device group which can be obtained using
+
+
+        """
+        # route=/api/v0/devicegroups/:name
+        # required=['name']
+        # optional=[]
+        # method=DELETE
+        route = f"""/api/v0/devicegroups/{name}"""
+        return self._delete(route, **kwargs)
+
+    def get_devices_by_group(self, name, **kwargs):
+        """List all devices matching the group provided.
+
+        Arguments:
+        - name Is the name of the device group which can be obtained using
+
+
+        """
+        # route=/api/v0/devicegroups/:name
+        # required=['name']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/devicegroups/{name}"""
+        return self._get(route, **kwargs)
+
+    def maintenance_devicegroup(self, name, **kwargs):
+        """Set a device group into maintenance mode.
+
+        Arguments:
+
+
+
+        """
+        # route=/api/v0/devicegroups/:name/maintenance
+        # required=['name']
+        # optional=[]
+        # method=POST
+        route = f"""/api/v0/devicegroups/{name}/maintenance"""
+        return self._post(route, **kwargs)
+
+    def add_devices_to_group(self, name, **kwargs):
+        """Add devices to a device group.
+
+        Arguments:
+        - name Is the name of the device group which can be obtained using
+
+
+        """
+        # route=/api/v0/devicegroups/:name/devices
+        # required=['name']
+        # optional=[]
+        # method=POST
+        route = f"""/api/v0/devicegroups/{name}/devices"""
+        return self._post(route, **kwargs)
+
+    def remove_devices_from_group(self, name, **kwargs):
+        """Removes devices from a device group.
+
+        Arguments:
+        - name Is the name of the device group which can be obtained using
+
+
+        """
+        # route=/api/v0/devicegroups/:name/devices
+        # required=['name']
+        # optional=[]
+        # method=DELETE
+        route = f"""/api/v0/devicegroups/{name}/devices"""
+        return self._delete(route, **kwargs)
+
+
+class Bills(Endpoint):
+
+    def list_bills(self, **kwargs):
+        """Retrieve the list of the bills in the system."""
+        # route=/api/v0/bills
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/bills"""
+        return self._get(route, **kwargs)
+
+    def get_bill(self, id, **kwargs):
+        """Retrieve a specific bill
+
+        Arguments:
+        - id is the specific bill id
+
+
+        """
+        # route=/api/v0/bills/:id
+        # required=['id']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/bills/{id}"""
+        return self._get(route, **kwargs)
+
+    def get_bill_graph(self, id, graph_type, **kwargs):
+        """NB: this call always returns a png graph, even with the SVG setting.
+
+        Arguments:
+
+
+
+        """
+        # route=/api/v0/bills/:id/graphs/:graph_type
+        # required=['id', 'graph_type']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/bills/{id}/graphs/{graph_type}"""
+        return self._get(route, **kwargs)
+
+    def get_bill_graphdata(self, id, graph_type, **kwargs):
+        """Retrieve the data used to draw a graph so it can be rendered in an external system
+
+        Arguments:
+
+
+
+        """
+        # route=/api/v0/bills/:id/graphdata/:graph_type
+        # required=['id', 'graph_type']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/bills/{id}/graphdata/{graph_type}"""
+        return self._get(route, **kwargs)
+
+    def get_bill_history(self, id, **kwargs):
+        """Retrieve the history of specific bill
+
+        Arguments:
+
+
+
+        """
+        # route=/api/v0/bills/:id/history
+        # required=['id']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/bills/{id}/history"""
+        return self._get(route, **kwargs)
+
+    def get_bill_history_graph(self, id, bill_hist_id, graph_type, **kwargs):
+        """NB: this call always returns a png graph, even with the SVG setting.
+
+        Arguments:
+
+
+
+        """
+        # route=/api/v0/bills/:id/history/:bill_hist_id/graphs/:graph_type
+        # required=['id', 'bill_hist_id', 'graph_type']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/bills/{id}/history/{bill_hist_id}/graphs/{graph_type}"""
+        return self._get(route, **kwargs)
+
+    def get_bill_history_graphdata(self, id, bill_hist_id, graph_type, **kwargs):
+        """Retrieve the data for a graph of a previous period of a bill, to be
+
+        Arguments:
+
+
+
+        """
+        # route=/api/v0/bills/:id/history/:bill_hist_id/graphdata/:graph_type
+        # required=['id', 'bill_hist_id', 'graph_type']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/bills/{id}/history/{bill_hist_id}/graphdata/{graph_type}"""
+        return self._get(route, **kwargs)
+
+    def delete_bill(self, id, **kwargs):
+        """Delete a specific bill and all dependent data
+
+        Arguments:
+        - id is the specific bill id
+
+
+        """
+        # route=/api/v0/bills/:id
+        # required=['id']
+        # optional=[]
+        # method=DELETE
+        route = f"""/api/v0/bills/{id}"""
+        return self._delete(route, **kwargs)
+
+    def create_edit_bill(self, **kwargs):
+        """Creates a new bill or updates an existing one"""
+        # route=/api/v0/bills
+        # required=[]
+        # optional=[]
+        # method=POST
+        route = f"""/api/v0/bills"""
+        return self._post(route, **kwargs)
+
+
+class Pollers(Endpoint):
+
+    def list_pollers(self, **kwargs):
+        """List all pollers in the system. It returns the data of the"""
+        # route=/api/v0/pollers
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/pollers"""
+        return self._get(route, **kwargs)
+
+    def list_poller_log(self, **kwargs):
+        """List all devices with their polling information. It returns the last"""
+        # route=/api/v0/pollers/log
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/pollers/log"""
+        return self._get(route, **kwargs)
+
+
 class Ports(Endpoint):
 
     def get_all_ports(self, **kwargs):
@@ -1502,19 +1168,19 @@ class Ports(Endpoint):
         route = f"""/api/v0/ports"""
         return self._get(route, **kwargs)
 
-    def search_ports(self, search, **kwargs):
+    def search_ports(self, field, search, **kwargs):
         """Search for ports matching the query.
 
         Arguments:
-        - search string to search in fields: ifAlias, ifDescr, and ifName
+        - field: comma separated list of field(s) to search
 
 
         """
-        # route=/api/v0/ports/search/:search
-        # required=['search']
+        # route=/api/v0/ports/search/:field/:search
+        # required=['field', 'search']
         # optional=[]
         # method=GET
-        route = f"""/api/v0/ports/search/{search}"""
+        route = f"""/api/v0/ports/search/{field}/{search}"""
         return self._get(route, **kwargs)
 
     def search_ports_in_specific_fields(self, field, search, **kwargs):
@@ -1690,6 +1356,432 @@ class Locations(Endpoint):
         return self._post(route, **kwargs)
 
 
+class System(Endpoint):
+
+    def ping(self, **kwargs):
+        """A simple endpoint for the availability of the API."""
+        # route=/api/v0/ping
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/ping"""
+        return self._get(route, **kwargs)
+
+    def system(self, **kwargs):
+        """It shows the information of the LibreNMS instance."""
+        # route=/api/v0/system
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/system"""
+        return self._get(route, **kwargs)
+
+
+class PollerGroups(Endpoint):
+
+    def system(self, poller_group, **kwargs):
+        """It shows the information of the LibreNMS instance.
+
+        Arguments:
+        - poller_group: optional. The name or the id of the poller group.
+
+
+        """
+        # route=/api/v0/poller_group/:poller_group
+        # required=['poller_group']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/poller_group/{poller_group}"""
+        return self._get(route, **kwargs)
+
+
+class PortSecurity(Endpoint):
+
+    def get_all_port_security(self, **kwargs):
+        """Get all the port security information of a port_id."""
+        # route=/api/v0/port_security
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/port_security"""
+        return self._get(route, **kwargs)
+
+    def get_port_security_by_port(self, port_id, **kwargs):
+        """Get all port security info by inputting port_id
+
+        Arguments:
+        - portid must be an integer
+
+
+        """
+        # route=/api/v0/port_security/port/:port_id
+        # required=['port_id']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/port_security/port/{port_id}"""
+        return self._get(route, **kwargs)
+
+    def get_port_security_by_hostname(self, hostname, **kwargs):
+        """Get all port security info by inputting hostname or device_id
+
+        Arguments:
+        - hostname can be str hostname or int device_id
+
+
+        """
+        # route=/api/v0/port_security/device/:hostname
+        # required=['hostname']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/port_security/device/{hostname}"""
+        return self._get(route, **kwargs)
+
+
+class Alerts(Endpoint):
+
+    def get_alert(self, id, **kwargs):
+        """Get details of an alert
+
+        Arguments:
+        - id is the alert id, you can obtain a list of alert ids from
+
+
+        """
+        # route=/api/v0/alerts/:id
+        # required=['id']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/alerts/{id}"""
+        return self._get(route, **kwargs)
+
+    def ack_alert(self, id, **kwargs):
+        """Acknowledge an alert
+
+        Arguments:
+        - id is the alert id, you can obtain a list of alert ids from
+
+
+        """
+        # route=/api/v0/alerts/:id
+        # required=['id']
+        # optional=[]
+        # method=PUT
+        route = f"""/api/v0/alerts/{id}"""
+        return self._put(route, **kwargs)
+
+    def unmute_alert(self, id, **kwargs):
+        """Unmute an alert
+
+        Arguments:
+        - id is the alert id, you can obtain a list of alert ids from
+
+
+        """
+        # route=/api/v0/alerts/unmute/:id
+        # required=['id']
+        # optional=[]
+        # method=PUT
+        route = f"""/api/v0/alerts/unmute/{id}"""
+        return self._put(route, **kwargs)
+
+    def list_alerts(self, **kwargs):
+        """List all alerts"""
+        # route=/api/v0/alerts
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/alerts"""
+        return self._get(route, **kwargs)
+
+    def get_alert_rule(self, id, **kwargs):
+        """Get the alert rule details.
+
+        Arguments:
+        - id is the rule id.
+
+
+        """
+        # route=/api/v0/rules/:id
+        # required=['id']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/rules/{id}"""
+        return self._get(route, **kwargs)
+
+    def delete_rule(self, id, **kwargs):
+        """Delete an alert rule by id
+
+        Arguments:
+        - id is the rule id.
+
+
+        """
+        # route=/api/v0/rules/:id
+        # required=['id']
+        # optional=[]
+        # method=DELETE
+        route = f"""/api/v0/rules/{id}"""
+        return self._delete(route, **kwargs)
+
+    def list_alert_rules(self, **kwargs):
+        """List the alert rules."""
+        # route=/api/v0/rules
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/rules"""
+        return self._get(route, **kwargs)
+
+    def add_rule(self, **kwargs):
+        """Add a new alert rule."""
+        # route=/api/v0/rules
+        # required=[]
+        # optional=[]
+        # method=POST
+        route = f"""/api/v0/rules"""
+        return self._post(route, **kwargs)
+
+    def edit_rule(self, **kwargs):
+        """Edit an existing alert rule"""
+        # route=/api/v0/rules
+        # required=[]
+        # optional=[]
+        # method=PUT
+        route = f"""/api/v0/rules"""
+        return self._put(route, **kwargs)
+
+    def get_alert_template(self, id, **kwargs):
+        """Get the alert template details.
+
+        Arguments:
+
+
+
+        """
+        # route=/api/v0/alert_templates/:id
+        # required=['id']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/alert_templates/{id}"""
+        return self._get(route, **kwargs)
+
+    def list_alert_templates(self, **kwargs):
+        """List the alert templates."""
+        # route=/api/v0/alert_templates
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/alert_templates"""
+        return self._get(route, **kwargs)
+
+    def add_alert_template(self, **kwargs):
+        """Add a new alert template."""
+        # route=/api/v0/alert_templates
+        # required=[]
+        # optional=[]
+        # method=POST
+        route = f"""/api/v0/alert_templates"""
+        return self._post(route, **kwargs)
+
+    def edit_rule(self, **kwargs):
+        """Edit an existing alert rule"""
+        # route=/api/v0/alert_templates
+        # required=[]
+        # optional=[]
+        # method=POST
+        route = f"""/api/v0/alert_templates"""
+        return self._post(route, **kwargs)
+
+
+class Routing(Endpoint):
+
+    def list_bgp(self, **kwargs):
+        """List the current BGP sessions."""
+        # route=/api/v0/bgp
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/bgp"""
+        return self._get(route, **kwargs)
+
+    def get_bgp(self, id, **kwargs):
+        """Retrieves a BGP session by ID
+
+        Arguments:
+
+
+
+        """
+        # route=/api/v0/bgp/:id
+        # required=['id']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/bgp/{id}"""
+        return self._get(route, **kwargs)
+
+    def edit_bgp_descr(self, id, **kwargs):
+        """This is a POST type request
+
+        Arguments:
+
+
+
+        """
+        # route=/api/v0/bgp/:id
+        # required=['id']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/bgp/{id}"""
+        return self._get(route, **kwargs)
+
+    def list_cbgp(self, **kwargs):
+        """List the current BGP sessions counters."""
+        # route=/api/v0/routing/bgp/cbgp
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/routing/bgp/cbgp"""
+        return self._get(route, **kwargs)
+
+    def list_ip_addresses(self, address_family, **kwargs):
+        """List all IPv4 and IPv6 or only version specific addresses.
+
+        Arguments:
+
+
+
+        """
+        # route=/api/v0/resources/ip/addresses/:address_family
+        # required=['address_family']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/resources/ip/addresses/{address_family}"""
+        return self._get(route, **kwargs)
+
+    def get_network_ip_addresses(self, id, **kwargs):
+        """Get all IPv4 and IPv6 addresses for particular network.
+
+        Arguments:
+        - id must be integer
+
+
+        """
+        # route=/api/v0/resources/ip/networks/:id/ip
+        # required=['id']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/resources/ip/networks/{id}/ip"""
+        return self._get(route, **kwargs)
+
+    def list_ip_networks(self, address_family, **kwargs):
+        """List all IPv4 and IPv6 or only version specific networks.
+
+        Arguments:
+
+
+
+        """
+        # route=/api/v0/resources/ip/networks/:address_family
+        # required=['address_family']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/resources/ip/networks/{address_family}"""
+        return self._get(route, **kwargs)
+
+    def list_ipsec(self, hostname, **kwargs):
+        """List the current IPSec tunnels which are active.
+
+        Arguments:
+        - hostname can be either the device hostname or id
+
+
+        """
+        # route=/api/v0/routing/ipsec/data/:hostname
+        # required=['hostname']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/routing/ipsec/data/{hostname}"""
+        return self._get(route, **kwargs)
+
+    def list_ospf(self, **kwargs):
+        """List the current OSPF neighbours."""
+        # route=/api/v0/ospf
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/ospf"""
+        return self._get(route, **kwargs)
+
+    def list_ospf_ports(self, **kwargs):
+        """List the current OSPF ports."""
+        # route=/api/v0/ospf_ports
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/ospf_ports"""
+        return self._get(route, **kwargs)
+
+    def list_ospfv3(self, **kwargs):
+        """List the current OSPFv3 neighbours."""
+        # route=/api/v0/ospfv3
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/ospfv3"""
+        return self._get(route, **kwargs)
+
+    def list_ospfv3_ports(self, **kwargs):
+        """List the current OSPFv3 ports."""
+        # route=/api/v0/ospfv3_ports
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/ospfv3_ports"""
+        return self._get(route, **kwargs)
+
+    def list_vrf(self, **kwargs):
+        """List the current VRFs."""
+        # route=/api/v0/routing/vrf
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/routing/vrf"""
+        return self._get(route, **kwargs)
+
+    def get_vrf(self, id, **kwargs):
+        """Retrieves VRF by ID
+
+        Arguments:
+
+
+
+        """
+        # route=/api/v0/routing/vrf/:id
+        # required=['id']
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/routing/vrf/{id}"""
+        return self._get(route, **kwargs)
+
+    def list_mpls_services(self, **kwargs):
+        """List MPLS services"""
+        # route=/api/v0/routing/mpls/services
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/routing/mpls/services"""
+        return self._get(route, **kwargs)
+
+    def list_mpls_saps(self, **kwargs):
+        """List MPLS SAPs"""
+        # route=/api/v0/routing/mpls/saps
+        # required=[]
+        # optional=[]
+        # method=GET
+        route = f"""/api/v0/routing/mpls/saps"""
+        return self._get(route, **kwargs)
+
+
 class Arp(Endpoint):
 
     def list_arp(self, query, **kwargs):
@@ -1715,17 +1807,18 @@ class LibreNMS:
         self.url = url
         self.token = token
         self.devices = Devices(self)
-        self.system = System(self)
         self.inventory = Inventory(self)
-        self.bills = Bills(self)
-        self.device_groups = DeviceGroups(self)
-        self.poller_groups = PollerGroups(self)
-        self.alerts = Alerts(self)
-        self.routing = Routing(self)
         self.switching = Switching(self)
-        self.port_security = PortSecurity(self)
         self.services = Services(self)
         self.devices = Devices(self)
+        self.device_groups = DeviceGroups(self)
+        self.bills = Bills(self)
+        self.pollers = Pollers(self)
         self.ports = Ports(self)
         self.locations = Locations(self)
+        self.system = System(self)
+        self.poller_groups = PollerGroups(self)
+        self.port_security = PortSecurity(self)
+        self.alerts = Alerts(self)
+        self.routing = Routing(self)
         self.arp = Arp(self)
