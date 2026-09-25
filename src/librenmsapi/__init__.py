@@ -1327,8 +1327,22 @@ class Locations(Endpoint):
     def edit_location(self, location, **kwargs):
         """Edits a location
 
-                  Arguments:
-                  - location: name or id of the location to edit
+        Arguments:
+        - location: name or id of the location to edit
+
+
+        """
+        # route=/api/v0/locations/:location
+        # required=['location']
+        # optional=[]
+        # method=PATCH
+        route = f"""/api/v0/locations/{location}"""
+        return self._patch(route, **kwargs)
+
+    def get_location(self, location, **kwargs):
+        """Gets a specific location
+
+        Arguments:
         - location: name or id of the location to get
 
 
@@ -1336,9 +1350,9 @@ class Locations(Endpoint):
         # route=/api/v0/location/:location
         # required=['location']
         # optional=[]
-        # method=PATCH
+        # method=
         route = f"""/api/v0/location/{location}"""
-        return self._patch(route, **kwargs)
+        return self._(route, **kwargs)
 
     def maintenance_location(self, location, **kwargs):
         """Set a location into maintenance mode.

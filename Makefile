@@ -11,8 +11,8 @@ all:
 
 
 code:
-	./generate.py > librenmsapi.py
-	python -m black --verbose librenmsapi.py
+	uv run generate.py > src/librenmsapi/__init__.py
+	uv run black --verbose src/librenmsapi/__init__.py
 
 clean:
 	rm -v librenmsapi.py
