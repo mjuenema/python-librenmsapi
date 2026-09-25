@@ -7,9 +7,9 @@ import random
 
 URL = os.environ['LIBRENMS_URL']    #'http://10.1.1.101:8087'
 TOKEN = os.environ['LIBRENMS_TOKEN']
-HOSTNAME = f'test{random.randint(100, 999)}'
+TIMESTAMP = int(time.time())
+LOCATION = f'location{TIMESTAMP}'
 HOSTNAME = 'demo.pysnmp.com'
-print(HOSTNAME)
 COMMUNITY = 'public'
 SHORTWAIT = 5
 LONGWAIT = 20
@@ -18,8 +18,10 @@ LONGWAIT = 20
 def librenms():
     conn = librenmsapi.LibreNMS(URL, TOKEN)
     conn.devices.add_device(hostname=HOSTNAME, community=COMMUNITY, version='v1', force_add=True)
+    conn.locations.add_location(location=LOCATION, lat=0.0, lng=0.0)
     yield conn
     conn.devices.del_device(HOSTNAME)
+    conn.locations.delete_location(location=LOCATION)
 
 @pytest.fixture
 def shortwait():
@@ -40,15 +42,15 @@ class TestDevices:
         assert result[0]['community'] == COMMUNITY
 
     def test_update_device_field(self, librenms):
-        result = librenms.devices.update_device_field(HOSTNAME, field='community', data='private') 
+        result = librenms.devices.update_device_field(HOSTNAME, community='private1')
         result = librenms.devices.get_device(HOSTNAME)
-        assert result[0]['community'] == 'private'
+        assert result[0]['community'] == 'private1'
 
     def test_update_device_field_array(self, librenms):
-        result = librenms.devices.update_device_field(HOSTNAME, field=['community', 'snmpver'], data=['private', '1']) 
+        result = librenms.devices.update_device_field(HOSTNAME, community='private2', snmpver=1)
         #assert result['status'] == 'ok'
         result = librenms.devices.get_device(HOSTNAME)
-        assert result[0]['community'] == 'private'
+        assert result[0]['community'] == 'private2'
         assert result[0]['snmpver'] == '1'
 
     def test_maintenance_device(self, librenms):
@@ -104,4 +106,21 @@ class TestDevices:
 #        result = librenms.devices.get_device_ports(HOSTNAME)
 #        assert len(result) == 67
 
+    def test_list_locations(self, librenms):
+        result = librenms.locations.list_locations()
+        assert isinstance(result, list)
+
+    def test_get_location(self, librenms):
+        result = librenms.locations.get_location(location=LOCATION)
+        assert isinstance(result, dict)
+        assert result['location'] == LOCATION
+
+#    def test_edit_location(self, librenms):
+#        TODO: Upstream bug: https://community.librenms.org/t/curl-patch-locations-problem/29114
+#        result = librenms.locations.edit_location(location=LOCATION, lat='1.0')
+#        assert isinstance(result, dict)
+#        result = librenms.locations.get_location(location=LOCATION)
+#        assert isinstance(result, dict)
+#        assert result['lat'] == 1.0
+#        assert result['lng'] == 2.0
 

@@ -23,8 +23,19 @@ def api_call(http_method):
     def decorator(func):
         # func(route, **kwargs)
         def wrapper(self, route, *args, **kwargs):
-            if http_method in ("POST", "PUT", "PATCH"):
+
+            # Rewrite kwargs so that values are all strings (issue12)
+            #
+            kwargs = {key: str(value) for key, value in kwargs.items()}
+
+            # Deal with different HTTP methods
+            #
+            if http_method in ("POST", "PUT"):
                 route = f"{self.parent.url}{route}"
+            elif http_method in ("PATCH"):
+                route = f"{self.parent.url}{route}"
+                # Rewrite **kwargs
+                kwargs = {"field": list(kwargs.keys()), "data": list(kwargs.values())}
             else:
                 route = f"{self.parent.url}{route}{'?' + urllib.parse.urlencode(kwargs) if kwargs else ''}"
 
@@ -520,11 +531,11 @@ class Devices(Endpoint):
         # route=/api/v0/devices/:hostname/services/:service_id/graphs/:datasource
         # required=['hostname', 'service_id', 'datasource']
         # optional=[]
-        # method=
+        # method=GET
         route = (
             f"""/api/v0/devices/{hostname}/services/{service_id}/graphs/{datasource}"""
         )
-        return self._(route, **kwargs)
+        return self._get(route, **kwargs)
 
     def get_device_ports(self, hostname, **kwargs):
         """Get a list of ports for a particular device.
@@ -657,9 +668,9 @@ class Devices(Endpoint):
         # route=/api/v0/devices/:hostname/components
         # required=['hostname']
         # optional=[]
-        # method=
+        # method=GET
         route = f"""/api/v0/devices/{hostname}/components"""
-        return self._(route, **kwargs)
+        return self._get(route, **kwargs)
 
     def delete_components(self, hostname, component, **kwargs):
         """Delete an existing component on a particular device.
@@ -1350,9 +1361,9 @@ class Locations(Endpoint):
         # route=/api/v0/location/:location
         # required=['location']
         # optional=[]
-        # method=
+        # method=GET
         route = f"""/api/v0/location/{location}"""
-        return self._(route, **kwargs)
+        return self._get(route, **kwargs)
 
     def maintenance_location(self, location, **kwargs):
         """Set a location into maintenance mode.

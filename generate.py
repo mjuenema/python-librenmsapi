@@ -155,7 +155,7 @@ for fn in glob.glob(f"{PATH_TO_API_DOC}/*.md"):
                 required = []       # List of 'route' required arguments.
                 optional = []       # List of 'route' optional arguments.
                 description = ''    # Description of the endpoint.
-                method = ''         # HTTP method: GET, POST, DELET, PATCH, PUT
+                method = 'GET'      # HTTP method: GET, POST, DELET, PATCH, PUT, defaults to GET 
                 route_descr = ''    # Markdown text descripbing the route arguments.
                 input_descr = ''    # Markdown text describing the input arguments.
                 state = STATE_HEADING
